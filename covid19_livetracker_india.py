@@ -3,6 +3,7 @@ import requests
 import bs4
 import plyer
 import tkinter as tk
+import datetime
 
 
 # To give request to website for the required url
@@ -27,6 +28,10 @@ def get_corona_details_india():
 
     return all_details
 
+def refresh_data():
+    new_data=get_corona_details_india()
+    content_label['text']=new_data
+
 
 def main():
     print(get_corona_details_india())
@@ -38,7 +43,7 @@ if __name__ == '__main__':
 window = tk.Tk()
 window.geometry("500x500")
 window.title("CORONA_LIVE_TRACKER_INDIA")
-window.config(background="yellow")
+window.config(background="powder blue")
 
 # image label for window
 img = tk.PhotoImage(file='coronavirus.png')
@@ -46,8 +51,18 @@ image_label = tk.Label(window, image=img, background="powder blue").pack()
 
 # for live data
 
-content_label = tk.Label(window, text=get_corona_details_india(),font=("Arial", 18, "bold"),
+content_label = tk.Label(window, text=get_corona_details_india(), font=("Arial", 18, "bold"),
                          background="powder blue")
 content_label.pack()
+
+date_time_label = tk.Label(window, text=datetime.datetime.now(), font=("poppins", 14, "bold"),
+                           background="powder blue")
+date_time_label.pack()
+
+# for refresh web data in the label
+
+refbtn = tk.Button(window, relief='ridge', border=2, text="Refresh", font=("Arial", 18, "bold"), background="grey",
+                   command=refresh_data)
+refbtn.pack()
 
 window.mainloop()
