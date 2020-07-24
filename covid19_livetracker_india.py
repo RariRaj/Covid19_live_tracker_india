@@ -4,6 +4,8 @@ import bs4
 import plyer
 import tkinter as tk
 import datetime
+import threading
+import time
 
 
 # To give request to website for the required url
@@ -30,6 +32,7 @@ def get_corona_details_india():
 
 def refresh_data():
     new_data=get_corona_details_india()
+    #print("Refreshing...")
     content_label['text']=new_data
 
 
@@ -37,8 +40,19 @@ def main():
     print(get_corona_details_india())
 
 
+def notify_me():
+    while True:
+        plyer.notification.notify(
+            title="CORONA LIVE STATUS - INDIA",
+            message=get_corona_details_india(),
+            timeout=10
+        )
+        time.sleep(30)
+
+
 if __name__ == '__main__':
     main()
+
 
 window = tk.Tk()
 window.geometry("500x500")
@@ -64,5 +78,10 @@ date_time_label.pack()
 refbtn = tk.Button(window, relief='ridge', border=2, text="Refresh", font=("Arial", 18, "bold"), background="grey",
                    command=refresh_data)
 refbtn.pack()
+
+
+th1=threading.Thread(target=notify_me)
+th1.setDaemon(True)
+th1.start()
 
 window.mainloop()
